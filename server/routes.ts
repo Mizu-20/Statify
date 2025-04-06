@@ -103,7 +103,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let redirectUri;
 
       // Replacing all the redirectUri logic with this
-      const redirectUri = process.env.SPOTIFY_REDIRECT_URI!;
+      redirectUri = process.env.SPOTIFY_REDIRECT_URI!;
       console.log("Using static redirect URI:", redirectUri);
 
       // Exchange code for token
