@@ -102,16 +102,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const replitUrl = process.env.REPLIT_DOMAINS;
       let redirectUri;
 
-      if (replitUrl) {
-        // Use first Replit domain (it's a comma-separated list)
-        const domain = replitUrl.split(",")[0].trim();
-        redirectUri = `https://${domain}/api/auth/callback`;
-        console.log("Callback using Replit redirect URI:", redirectUri);
-      } else {
-        // Fallback to localhost for local development
-        redirectUri = "http://localhost:5000/api/auth/callback";
-        console.log("Callback using localhost redirect URI:", redirectUri);
-      }
+      // Replacing all the redirectUri logic with this
+      const redirectUri = process.env.SPOTIFY_REDIRECT_URI!;
+      console.log("Using static redirect URI:", redirectUri);
 
       // Exchange code for token
       const tokenResponse = await axios.post(
