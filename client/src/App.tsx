@@ -18,20 +18,34 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import { Suspense, useEffect } from "react";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, login } = useAuth();
-  const [, setLocation] = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      setLocation("/login");
-    }
-  }, [isAuthenticated, isLoading, setLocation]);
+    fetch("/api/auth/me", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setAuthenticated(true);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingSpinner message="Checking authentication..." />;
   }
 
-  return isAuthenticated ? <>{children}</> : null;
+  if (!authenticated) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  return <>{children}</>;
 }
 
 function Router() {
